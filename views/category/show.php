@@ -5,7 +5,7 @@ use App\Connection;
 use App\Model\Category;
 use App\Model\Post;
 use App\Router;
-use App\Model\PaginatedQuery;
+use App\PaginatedQuery;
 
 $id = (int)($params)['id'];
 $slug = ($params)['slug'];
@@ -51,7 +51,7 @@ $PaginatedQuery = new PaginatedQuery(
 /** @var Post[] */
 $posts = $PaginatedQuery->getItems();
 
-dd($posts);
+
 $link = $router->url('category', ['id' => $category->getID(), 'slug' => $category->getSlug()]); // lien actuel
 
 ?>
@@ -70,22 +70,12 @@ $link = $router->url('category', ['id' => $category->getID(), 'slug' => $categor
 
 
 <div class="d-flex justify-content-between my-4">
-    <?php if ($currentPage > 1) : ?>
-    <?php
-        $l = $link;
-        if ($currentPage > 2) $l .= $link . "?page=" . ($currentPage - 1);
-        ?>
-    <a href="<?= $l ?>" class="btn btn-primary">&laquo; Page
-        Précédent</a>
+    <?= $PaginatedQuery->previousLink($link) ?>
 
-    <?php endif ?>
-    <?php if ($currentPage < $pages) : ?>
-    <a href="<?= $link ?>?page=<?= ($currentPage + 1) ?>" class="btn btn-primary ml-auto">Page
-        Suivante &raquo;</a>
-    <?php endif ?>
-</div>
+    <?= $PaginatedQuery->nextLink($link) ?>
 
-<!--
+
+    <!--
 
 // copy/past/classe $currentPage = URL::getPositiveInt('page', 1); // (int) $page; // forcer $currentPage = (int)($_GET['page'] ?? 1) ?: 1;
 
