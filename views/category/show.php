@@ -5,6 +5,7 @@ use App\Connection;
 use App\Model\Category;
 use App\Model\Post;
 use App\Router;
+use App\Model\PaginatedQuery;
 
 $id = (int)($params)['id'];
 $slug = ($params)['slug'];
@@ -33,28 +34,24 @@ if ($category->getSlug() !== $slug) {
 
 $title = "Catégorie {$category->getName()}";
 
-
-$currentPage = URL::getPositiveInt('page', 1); // (int) $page; // forcer $currentPage = (int)($_GET['page'] ?? 1) ?: 1;
-
-
-$count = (int)$pdo
-    ->query('SELECT count(category_id) FROM post_category WHERE category_id= ' . $category->getID())
-    ->fetch(PDO::FETCH_NUM)[0];
-$perPage = 12;
-$pages =  ceil($count / $perPage,); //arondi au chiffre supérieur 
-if ($currentPage > $pages) {
-    throw new Exception('Cette page n\éxiste pas ');
-}
-$offset = $perPage * ($currentPage - 1);
-$query = $pdo->query("
-    SELECT p.* 
+/* */
+$PaginatedQuery = new PaginatedQuery(
+    "SELECT p.* 
     FROM post p 
     JOIN post_category pc ON pc.post_id = p.id 
     WHERE pc.category_id = {$category->getID()}
-    ORDER BY created_at DESC 
-    LIMIT $perPage OFFSET $offset
-    ");
-$posts = $query->fetchAll(PDO::FETCH_CLASS, Post::class);
+    ORDER BY created_at DESC",
+    "SELECT count(category_id) FROM post_category WHERE category_id= {$category->getID()}",
+    Post::class
+);
+
+
+/*WAs here */
+
+/** @var Post[] */
+$posts = $PaginatedQuery->getItems();
+
+dd($posts);
 $link = $router->url('category', ['id' => $category->getID(), 'slug' => $category->getSlug()]); // lien actuel
 
 ?>
@@ -87,3 +84,27 @@ $link = $router->url('category', ['id' => $category->getID(), 'slug' => $categor
         Suivante &raquo;</a>
     <?php endif ?>
 </div>
+
+<!--
+
+// copy/past/classe $currentPage = URL::getPositiveInt('page', 1); // (int) $page; // forcer $currentPage = (int)($_GET['page'] ?? 1) ?: 1;
+
+
+/*$count = (int)$pdo
+    ->query('SELECT count(category_id) FROM post_category WHERE category_id= ' . $category->getID())
+    ->fetch(PDO::FETCH_NUM)[0];*/
+//  copy/past/classe $perPage = 12;
+//  copy/past/classe $pages =  ceil($count / $perPage,); //arondi au chiffre supérieur 
+/*  copy/past/classe if ($currentPage > $pages) {
+    throw new Exception('Cette page n\éxiste pas ');
+
+$offset = $perPage * ($currentPage - 1);}
+$query = $pdo->query("
+    SELECT p.* 
+    FROM post p 
+    JOIN post_category pc ON pc.post_id = p.id 
+    WHERE pc.category_id = {$category->getID()}
+    ORDER BY created_at DESC 
+    LIMIT $perPage OFFSET $offset
+    ");
+$posts = $query->fetchAll(PDO::FETCH_CLASS, Post::class);*/-->
