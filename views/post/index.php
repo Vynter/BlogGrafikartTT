@@ -3,10 +3,17 @@
 use App\Connection;
 use App\Helpers\Text;
 use App\Model\Post;
+use App\PaginatedQuery;
 use App\URL;
 
 $title = 'blog';
 $pdo = Connection::getPDO();
+
+$paginatedQuery = new PaginatedQuery(
+    "SELECT * FROM post ORDER BY created_at DESC",
+    'SELECT count(id) FROM post LIMIT 1'
+);
+/*
 
 $currentPage = URL::getPositiveInt('page', 1); // (int) $page; // forcer $currentPage = (int)($_GET['page'] ?? 1) ?: 1;
 
@@ -19,7 +26,9 @@ if ($currentPage > $pages) {
 }
 $offset = $perPage * ($currentPage - 1);
 $query = $pdo->query("SELECT * FROM post ORDER BY created_at DESC LIMIT $perPage OFFSET $offset");
-$posts = $query->fetchAll(PDO::FETCH_CLASS, Post::class);
+$posts = $query->fetchAll(PDO::FETCH_CLASS, Post::class);*/
+$posts = $paginatedQuery->getItems(Post::class);
+$link = $router->url('home')
 
 ?>
 
@@ -36,18 +45,8 @@ $posts = $query->fetchAll(PDO::FETCH_CLASS, Post::class);
 
 
 <div class="d-flex justify-content-between my-4">
-    <?php if ($currentPage > 1) : ?>
-    <?php $link = $router->url('home');
-        if ($currentPage > 2) $link .= "?page=" . ($currentPage - 1);
-        ?>
-    <a href="<?= $link ?>" class="btn btn-primary">&laquo; Page
-        Précédent</a>
-
-    <?php endif ?>
-    <?php if ($currentPage < $pages) : ?>
-    <a href="<?= $router->url('home') ?>?page=<?= ($currentPage + 1) ?>" class="btn btn-primary ml-auto">Page
-        Suivante &raquo;</a>
-    <?php endif ?>
+    <?= $paginatedQuery->previousLink($link) ?>
+    <?= $paginatedQuery->nextLink($link) ?>
 </div>
 
 

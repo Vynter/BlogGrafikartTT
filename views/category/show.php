@@ -41,15 +41,14 @@ $PaginatedQuery = new PaginatedQuery(
     JOIN post_category pc ON pc.post_id = p.id 
     WHERE pc.category_id = {$category->getID()}
     ORDER BY created_at DESC",
-    "SELECT count(category_id) FROM post_category WHERE category_id= {$category->getID()}",
-    Post::class
+    "SELECT count(category_id) FROM post_category WHERE category_id= {$category->getID()}"
 );
 
 
 /*WAs here */
 
 /** @var Post[] */
-$posts = $PaginatedQuery->getItems();
+$posts = $PaginatedQuery->getItems(Post::class);
 
 
 $link = $router->url('category', ['id' => $category->getID(), 'slug' => $category->getSlug()]); // lien actuel
