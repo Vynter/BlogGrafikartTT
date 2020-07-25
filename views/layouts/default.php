@@ -12,7 +12,7 @@
 <body class="d-flex flex-column h-100">
 
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a href="#" class="navbar-brand">Mon site</a>
+        <a href="<?= $router->url('home'); ?>" class="navbar-brand">Mon site</a>
 
     </nav>
     <div class="container mt-4">
