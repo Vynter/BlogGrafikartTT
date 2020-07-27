@@ -2,6 +2,7 @@
 
 use App\Connection;
 use App\Helpers\Text;
+use App\Model\Category;
 use App\Model\Post;
 use App\PaginatedQuery;
 use App\URL;
@@ -28,8 +29,26 @@ $offset = $perPage * ($currentPage - 1);
 $query = $pdo->query("SELECT * FROM post ORDER BY created_at DESC LIMIT $perPage OFFSET $offset");
 $posts = $query->fetchAll(PDO::FETCH_CLASS, Post::class);*/
 $posts = $paginatedQuery->getItems(Post::class);
-$link = $router->url('home')
+$postsByID = [];
+foreach ($posts as $post) {
+    $postsByID[$post->getID()] = $post;
+}
 
+/**Pour afficher les catégories de chaque art par page (requéte opti) */
+$categories = $pdo
+    ->query('SELECT c.* , pc.post_id
+            FROM post_category pc
+            JOIN category c ON c.id = pc.category_id
+            WHERE pc.post_id IN (' . implode(',', array_keys($postsByID)) . ')        
+    ')->fetchAll(PDO::FETCH_CLASS, Category::class);
+
+foreach ($categories as $category) {
+    //$postsByID[$category->getPostID()]->categories[] = $category;
+    $postsByID[$category->getPostID()]->addCategory($category);
+}
+
+
+$link = $router->url('home')
 ?>
 
 <h1>Mon Blog</h1>
@@ -48,21 +67,6 @@ $link = $router->url('home')
     <?= $paginatedQuery->previousLink($link) ?>
     <?= $paginatedQuery->nextLink($link) ?>
 </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 <!---
