@@ -8,6 +8,9 @@ use App\Table\Exception\NotFoundException;
 
 class CategoryTable extends Table
 {
+    protected $table = "category";
+    protected $class = Category::class;
+    /*
     public function find(int $id): Category
     {
         $query = $this->pdo->prepare(
@@ -23,7 +26,7 @@ class CategoryTable extends Table
             throw new NotFoundException('category', $id);
         }
         return $result;
-    }
+    }*/
     /**
      * @param app\Model\Post[] $posts
      */

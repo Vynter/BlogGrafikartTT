@@ -10,6 +10,9 @@ use App\Table\Exception\NotFoundException;
 
 class PostTable extends Table
 {
+    protected $table = "post";
+    protected $class = Post::class;
+    /*
     public function find(int $id): Post
     {
         $query = $this->pdo->prepare(
@@ -25,7 +28,7 @@ class PostTable extends Table
             throw new NotFoundException('post', $id);
         }
         return $result;
-    }
+    }*/
 
     public function findPaginated()
     {
