@@ -1,51 +1,14 @@
 <?php
 
 use App\Connection;
-use App\Helpers\Text;
-use App\Model\Category;
-use App\Model\Post;
-use App\PaginatedQuery;
-use App\URL;
+use App\Table\PostTable;
+
 
 $title = 'blog';
 $pdo = Connection::getPDO();
+$table = new PostTable($pdo);
+list($posts, $pagination) = $table->findPaginated();
 
-$paginatedQuery = new PaginatedQuery(
-    "SELECT * FROM post ORDER BY created_at DESC",
-    'SELECT count(id) FROM post LIMIT 1'
-);
-/*
-
-$currentPage = URL::getPositiveInt('page', 1); // (int) $page; // forcer $currentPage = (int)($_GET['page'] ?? 1) ?: 1;
-
-
-$count = (int)$pdo->query('SELECT count(id) FROM post LIMIT 1')->fetch(PDO::FETCH_NUM)[0];
-$perPage = 12;
-$pages =  ceil($count / $perPage,); //arondi au chiffre supérieur 
-if ($currentPage > $pages) {
-    throw new Exception('Cette page n\éxiste pas ');
-}
-$offset = $perPage * ($currentPage - 1);
-$query = $pdo->query("SELECT * FROM post ORDER BY created_at DESC LIMIT $perPage OFFSET $offset");
-$posts = $query->fetchAll(PDO::FETCH_CLASS, Post::class);*/
-$posts = $paginatedQuery->getItems(Post::class);
-$postsByID = [];
-foreach ($posts as $post) {
-    $postsByID[$post->getID()] = $post;
-}
-
-/**Pour afficher les catégories de chaque art par page (requéte opti) */
-$categories = $pdo
-    ->query('SELECT c.* , pc.post_id
-            FROM post_category pc
-            JOIN category c ON c.id = pc.category_id
-            WHERE pc.post_id IN (' . implode(',', array_keys($postsByID)) . ')        
-    ')->fetchAll(PDO::FETCH_CLASS, Category::class);
-
-foreach ($categories as $category) {
-    //$postsByID[$category->getPostID()]->categories[] = $category;
-    $postsByID[$category->getPostID()]->addCategory($category);
-}
 
 
 $link = $router->url('home')
@@ -64,8 +27,8 @@ $link = $router->url('home')
 
 
 <div class="d-flex justify-content-between my-4">
-    <?= $paginatedQuery->previousLink($link) ?>
-    <?= $paginatedQuery->nextLink($link) ?>
+    <?= $pagination->previousLink($link) ?>
+    <?= $pagination->nextLink($link) ?>
 </div>
 
 

@@ -6,26 +6,20 @@ use App\Model\Category;
 use App\Model\Post;
 use App\Router;
 use App\PaginatedQuery;
+use App\Table\CategoryTable;
+use App\Table\PostTable;
 
 $id = (int)($params)['id'];
 $slug = ($params)['slug'];
 
 $pdo = Connection::getPDO();
 
-$query = $pdo->prepare(
-    'SELECT * 
-    FROM category
-    WHERE id=:id
-    '
-);
-$query->execute(['id' => $id]);
-$query->setFetchMode(PDO::FETCH_CLASS, Category::class);
-$category = $query->fetch();
+$categoryTable = new CategoryTable($pdo);
+$category = $categoryTable->find($id);
 
 
-if ($category === false) {
-    throw new Exception('aucun catégorie ne corespend à ID que vous chercher');
-}
+
+
 if ($category->getSlug() !== $slug) {
     $url = $router->url('category', ['id' => $category->getID(), 'slug' => $category->getSlug()]);
     http_response_code(301); // a revoir
@@ -34,39 +28,12 @@ if ($category->getSlug() !== $slug) {
 
 $title = "Catégorie {$category->getName()}";
 
-/* */
-$PaginatedQuery = new PaginatedQuery(
-    "SELECT p.* 
-    FROM post p 
-    JOIN post_category pc ON pc.post_id = p.id 
-    WHERE pc.category_id = {$category->getID()}
-    ORDER BY created_at DESC",
-    "SELECT count(category_id) FROM post_category WHERE category_id= {$category->getID()}"
-);
+[$posts, $PaginatedQuery] = (new PostTable($pdo))->findPaginatedForCategory($category->getID());
+/* same as 
+$table = new PostTable($pdo);
+list($posts, $pagination) = $table->findPaginatedForCategory($category->getID);
+*/
 
-
-/*WAs here */
-
-/** @var Post[] */
-$posts = $PaginatedQuery->getItems(Post::class);
-
-$postsByID = [];
-foreach ($posts as $post) {
-    $postsByID[$post->getID()] = $post;
-}
-
-/**Pour afficher les catégories de chaque art par page (requéte opti) */
-$categories = $pdo
-    ->query('SELECT c.* , pc.post_id
-            FROM post_category pc
-            JOIN category c ON c.id = pc.category_id
-            WHERE pc.post_id IN (' . implode(',', array_keys($postsByID)) . ')        
-    ')->fetchAll(PDO::FETCH_CLASS, Category::class);
-
-foreach ($categories as $category) {
-    //$postsByID[$category->getPostID()]->categories[] = $category;
-    $postsByID[$category->getPostID()]->addCategory($category);
-}
 
 $link = $router->url('category', ['id' => $category->getID(), 'slug' => $category->getSlug()]); // lien actuel
 
