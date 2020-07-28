@@ -32,6 +32,12 @@ class Router
         return $this;
     }
 
+    public function post(string $url, string  $view, $name = null): self
+    {
+        $this->router->map('POST', $url, $view, $name);
+        return $this;
+    }
+
     public function url($name, $params = [])
     {
         return $this->router->generate($name, $params);
