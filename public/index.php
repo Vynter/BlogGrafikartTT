@@ -42,7 +42,9 @@ $router
     ->get('/', 'post/index', 'home')
     ->get('/blog/categoty/[*:slug]-[i:id]', 'category/show', 'category') // quand deux lien se ressemble de préférence mettre la plus compliqué en premier
     ->get('/blog/[*:slug]-[i:id]', 'post/show', 'post')
-
+    ->get('/admin', 'admin/post/index', 'admin_posts')
+    ->get('/admin/posts/[i:id]', 'admin/post/edit', 'admin_post')
+    ->get('/admin/posts/new', 'admin/post/new', 'admin_post_new')
     ->run();
 
 
