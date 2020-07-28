@@ -9,8 +9,14 @@ $pdo = Connection::getPDO();
 $link = $router->url('admin_posts');
 ?>
 
+<?php if (isset($_GET['delete'])) : ?>
+<div class="alert alert-success">L'article a bien été supprimer</div>
+
+<?php endif ?>
+
 <table class="table table-striped">
     <thead>
+        <th>#</th>
         <th>Titre</th>
         <th>Actions</th>
     </thead>
@@ -18,13 +24,20 @@ $link = $router->url('admin_posts');
         <?php foreach ($posts as $post) : ?>
         <tr>
             <td>
+                <?= $post->getID() ?>
+            </td>
+            <td>
                 <a href="<?= $router->url('admin_post', ['id' => $post->getID()]) ?>">
                     <?= e($post->getName()) ?>
                 </a>
             </td>
             <td>
-                <a href="<?= $router->url('admin_post', ['id' => $post->getID()]) ?>">
+                <a href="<?= $router->url('admin_post', ['id' => $post->getID()]) ?>" class="btn btn-primary">
                     Editer
+                </a>
+                <a href="<?= $router->url('admin_post_delete', ['id' => $post->getID()]) ?>" class="btn btn-danger"
+                    onclick="return confirm('Voulez vous vraiment effectuer cette action')">
+                    Supprimer
                 </a>
             </td>
         </tr>
