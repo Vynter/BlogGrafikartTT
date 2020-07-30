@@ -48,7 +48,7 @@ if (!empty($_POST)) {
 <?php endif ?>
 <?php if (!empty($errors)) : ?>
 <div class="alert alert-danger">
-    Article n'a pas pu etre modifié, merci de corriger vos erreurs
+    Article n'a pas pu etre modifié, merci de corriger vos erreurs.
 </div>
 <?php endif ?>
 
