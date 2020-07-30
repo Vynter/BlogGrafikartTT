@@ -43,7 +43,7 @@ if (!empty($_POST)) {
 ?>
 <?php if ($success) : ?>
 <div class="alert alert-success">
-    L'article a bien été modifier
+    L'article a bien été modifier.
 </div>
 <?php endif ?>
 <?php if (!empty($errors)) : ?>
