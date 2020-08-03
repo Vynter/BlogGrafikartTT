@@ -2,7 +2,7 @@
     <div class="card-body">
         <h5 class="card-title"><?= htmlentities($post->getName()) ?></h5>
         <p class="text-muted">
-            <?= $post->getCreatedAt()->format('d F Y') ?>::
+            <?= $post->getCreated_at()->format('d F Y') ?>::
             <?php foreach ($post->getCategories() as $k => $category) : ?>
             <?php if ($k > 0) : ?><?php echo ', '; ?><?php endif ?>
             <a

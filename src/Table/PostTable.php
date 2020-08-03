@@ -33,13 +33,16 @@ class PostTable extends Table
 
     public function update(Post $post): void
     {
-        $query = $this->pdo->prepare("UPDATE {$this->table} SET name= :name WHERE id = :id");
+        $query = $this->pdo->prepare("UPDATE {$this->table} SET name= :name,slug =:slug, content =:content, created_at = :created_at WHERE id = :id");
         $ok = $query->execute([
             'id' => $post->getID(),
-            'name' => $post->getName()
+            'name' => $post->getName(),
+            'slug' => $post->getSlug(),
+            'content' => $post->getContent(),
+            'created_at' => $post->getCreated_at()->format('Y-m-d H:i:s') // trés important
         ]);
         if ($ok === false) {
-            throw new Exception("Impossible de supprimer l'enregistrement $id dans la table {$this->table}");
+            throw new Exception("Impossible de supprimer l'enregistrement {$post->getID()} dans la table {$this->table}");
         }
     }
 

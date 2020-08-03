@@ -35,4 +35,13 @@ abstract class Table
         }
         return $result;
     }
+    /**
+     * Vérifie si une valeur existe dans la table
+     */
+    public function exists(string $field, $value): bool
+    {
+        $query = $this->pdo->prepare("SELECT COUNT(id) FROM {$this->table} WHERE $field = ?");
+        $query->execute([$value]);
+        return (int) $query->fetch(PDO::FETCH_NUM)[0] > 0;
+    }
 }

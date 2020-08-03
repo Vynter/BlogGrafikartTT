@@ -28,6 +28,10 @@ class Post
         $this->content = $content;
         return $this;
     }
+    public function getContent(): ?string
+    {
+        return $this->content;
+    }
     public function getExcerpt(): ?string
     {
         if ($this->content === null) {
@@ -36,10 +40,17 @@ class Post
 
         return nl2br(htmlentities(Text::excerpt($this->content, 60)));
     }
-    public function getCreatedAt(): DateTime
+    public function getCreated_at(): DateTime //just rename it from getCreatedAt
     {
         return new DateTime($this->created_at);
     }
+
+    public function setCreated_at(string $date): self
+    {
+        $this->created_at = $date;
+        return $this;
+    }
+
     public function getID(): ?int
     {
         return $this->id;
@@ -47,6 +58,11 @@ class Post
     public function getSlug(): ?string /*return null ou string */
     {
         return $this->slug;
+    }
+    public function setSlug($slug): self
+    {
+        $this->slug = $slug;
+        return $this;
     }
     public function getFormattedContent(): string
     {
