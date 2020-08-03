@@ -14,7 +14,7 @@ $errors = [];
 
 if (!empty($_POST)) {
     Validator::lang('fr'); //changement de langue
-    $v = new PostValidator($_POST, $postTable);
+    $v = new PostValidator($_POST, $postTable, $post->getID());
     /*    $v = new Validator($_POST);
     $v->labels(array( //on change le nom des label pour les erreurs
         'name' => 'Titre',

@@ -37,10 +37,15 @@ abstract class Table
     }
     /**
      * Vérifie si une valeur existe dans la table
+     * @var except c pour nous permettre d'enregistré aprés avoir fait nimp quel modife
      */
-    public function exists(string $field, $value): bool
+    public function exists(string $field, $value, ?int $except = null): bool
     {
-        $query = $this->pdo->prepare("SELECT COUNT(id) FROM {$this->table} WHERE $field = ?");
+        $sql = "SELECT COUNT(id) FROM {$this->table} WHERE $field = ?";
+        if ($except !== null) {
+            $sql .= " AND id != {$except}";
+        }
+        $query = $this->pdo->prepare($sql);
         $query->execute([$value]);
         return (int) $query->fetch(PDO::FETCH_NUM)[0] > 0;
     }
