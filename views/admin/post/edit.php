@@ -1,7 +1,8 @@
 <?php
 
-use App\Connection;
 use App\HTML\Form;
+use App\Connection;
+use App\ObjectHelper;
 use Valitron\Validator;
 use App\Table\PostTable;
 use App\Validators\PostValidator;
@@ -26,12 +27,12 @@ if (!empty($_POST)) {
     $v->rule('required', ['name','slug']);*/
     /*$v->rule('lengthBetween', 'name', 3, 200); // la longueur doit étre entre 3 a 200 caract
     $v->rule('lengthBetween', 'slug', 3, 200);*/
-    $post
+    /*$post   // cette partie rempalcé par ObjectHelper
         ->setName($_POST['name'])
         ->setContent($_POST['content'])
         ->setSlug($_POST['slug'])
-        ->setCreated_at($_POST['created_at']);
-
+        ->setCreated_at($_POST['created_at']);*/
+    ObjectHelper::hydrate($post, $_POST, ['name', 'content', 'slug', 'created_at']);
     if ($v->validate()) {
         $postTable->update($post);
         $success = true;
@@ -51,6 +52,11 @@ $form = new Form($post, $errors);
     L'article a bien été modifier.
 </div>
 <?php endif ?>
+<?php if (isset($_GET['created'])) : ?>
+<div class="alert alert-success">
+    L'article a bien été Crée.
+</div>
+<?php endif ?>
 <?php if (!empty($errors)) : ?>
 <div class="alert alert-danger">
     Article n'a pas pu etre modifié, merci de corriger vos erreurs.
@@ -60,13 +66,4 @@ $form = new Form($post, $errors);
 <h1>Editer l'article <?= e($post->getName()) ?></h1>
 
 
-
-<form action="" method="POST">
-    <?= $form->input('name', 'Titre') ?>
-    <?= $form->input('slug', 'URL') ?>
-    <?= $form->textarea('content', 'Contenu') ?>
-    <?= $form->input('created_at', 'Date de création') ?>
-
-
-    <button class="btn btn-primary">Modifier</button>
-</form>
+<?php require('_form.php'); ?>

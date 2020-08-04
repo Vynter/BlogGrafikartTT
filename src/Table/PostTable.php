@@ -30,7 +30,20 @@ class PostTable extends Table
         }
         return $result;
     }*/
-
+    public function create(Post $post): void
+    {
+        $query = $this->pdo->prepare("INSERT INTO {$this->table} set  name= :name,slug =:slug, content =:content, created_at = :created_at");
+        $ok = $query->execute([
+            'name' => $post->getName(),
+            'slug' => $post->getSlug(),
+            'content' => $post->getContent(),
+            'created_at' => $post->getCreated_at()->format('Y-m-d H:i:s') // trés important
+        ]);
+        if ($ok === false) {
+            throw new Exception("Impossible de crée l'enregistrement {$post->getID()} dans la table {$this->table}");
+        }
+        $post->setID($this->pdo->lastInsertId());
+    }
     public function update(Post $post): void
     {
         $query = $this->pdo->prepare("UPDATE {$this->table} SET name= :name,slug =:slug, content =:content, created_at = :created_at WHERE id = :id");

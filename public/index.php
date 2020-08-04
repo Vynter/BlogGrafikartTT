@@ -45,7 +45,7 @@ $router
     ->get('/admin', 'admin/post/index', 'admin_posts')
     ->match('/admin/posts/[i:id]', 'admin/post/edit', 'admin_post') // quand on choisir ART a edit on utilise get et post when we valid edit
     ->post('/admin/posts/[i:id]/delete', 'admin/post/delete', 'admin_post_delete')
-    ->get('/admin/posts/new', 'admin/post/new', 'admin_post_new')
+    ->match('/admin/posts/new', 'admin/post/new', 'admin_post_new')
     ->run();
 
 
