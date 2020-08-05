@@ -38,6 +38,7 @@ abstract class Table
     /**
      * Vérifie si une valeur existe dans la table
      * @var except c pour nous permettre d'enregistré aprés avoir fait nimp quel modife
+     * aprés avoir modifier un article ca nous permet d'enregistré l'ancienne version sans avoir une erreur de valeur existe déja dans la bdd
      */
     public function exists(string $field, $value, ?int $except = null): bool
     {
