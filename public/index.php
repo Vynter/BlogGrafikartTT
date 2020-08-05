@@ -39,13 +39,13 @@ if ($page === "1") {
 
 $router = new Router(dirname(__DIR__) . '/views');
 $router
-    ->get('/', 'post/index', 'home')
+    ->get('/', 'post/index', 'home') // liste des aricles
     ->get('/blog/categoty/[*:slug]-[i:id]', 'category/show', 'category') // quand deux lien se ressemble de préférence mettre la plus compliqué en premier
-    ->get('/blog/[*:slug]-[i:id]', 'post/show', 'post')
-    ->get('/admin', 'admin/post/index', 'admin_posts')
+    ->get('/blog/[*:slug]-[i:id]', 'post/show', 'post') //contenu de l'article
+    ->get('/admin', 'admin/post/index', 'admin_posts') // index de l'administration
     ->match('/admin/posts/[i:id]', 'admin/post/edit', 'admin_post') // quand on choisir ART a edit on utilise get et post when we valid edit
-    ->post('/admin/posts/[i:id]/delete', 'admin/post/delete', 'admin_post_delete')
-    ->match('/admin/posts/new', 'admin/post/new', 'admin_post_new')
+    ->post('/admin/posts/[i:id]/delete', 'admin/post/delete', 'admin_post_delete') // article suprimer
+    ->match('/admin/posts/new', 'admin/post/new', 'admin_post_new') // création de l'article
     ->run();
 
 

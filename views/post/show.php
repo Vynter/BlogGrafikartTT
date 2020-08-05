@@ -43,7 +43,7 @@ $categories = $query->fetchAll(PDO::FETCH_CLASS, Category::class);
 
 
 <h1 class="card-title"><?= e($post->getName()) ?></h1>
-<p class="text-muted"><?= $post->getCreatedAt()->format('d F Y') ?></p>
+<p class="text-muted"><?= $post->getCreated_at()->format('d F Y') ?></p>
 <?php foreach ($post->getCategories() as $k => $category) : ?>
 <?php if ($k > 0) : ?><?php echo ', '; ?><?php endif ?>
 <a
