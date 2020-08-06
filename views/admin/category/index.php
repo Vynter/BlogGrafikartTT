@@ -8,7 +8,7 @@ Auth::check();
 
 $title = "Gestion des catégories";
 $pdo = Connection::getPDO();
-[$posts, $pagination] = (new CategoryTable($pdo))->findPaginated();
+$items = (new CategoryTable($pdo))->all();
 $link = $router->url('admin_categories');
 ?>
 
@@ -21,24 +21,28 @@ $link = $router->url('admin_categories');
     <thead>
         <th>#</th>
         <th>Titre</th>
-        <th><a href="<?= $router->url('admin_post_new') ?>" class="btn btn-primary">Nouveau</a> </th>
+        <th>URL</th>
+        <th><a href="<?= $router->url('admin_categories_new') ?>" class="btn btn-primary">Nouveau</a> </th>
     </thead>
     <tbody>
-        <?php foreach ($posts as $post) : ?>
+        <?php foreach ($items as $item) : ?>
         <tr>
             <td>
-                <?= $post->getID() ?>
+                <?= $item->getID() ?>
             </td>
             <td>
-                <a href="<?= $router->url('admin_post', ['id' => $post->getID()]) ?>">
-                    <?= e($post->getName()) ?>
+                <a href="<?= $router->url('admin_category', ['id' => $item->getID()]) ?>">
+                    <?= e($item->getName()) ?>
                 </a>
             </td>
             <td>
-                <a href="<?= $router->url('admin_post', ['id' => $post->getID()]) ?>" class="btn btn-primary">
+                <?= $item->getSlug() ?>
+            </td>
+            <td>
+                <a href="<?= $router->url('admin_category', ['id' => $item->getID()]) ?>" class="btn btn-primary">
                     Editer
                 </a>
-                <form action="<?= $router->url('admin_post_delete', ['id' => $post->getID()]) ?>" method="POST"
+                <form action="<?= $router->url('admin_categories_delete', ['id' => $item->getID()]) ?>" method="POST"
                     style="display:inline" onsubmit="return confirm('Voulez vous vraiment effectuer cette action')">
 
                     <button type="submit" class="btn btn-danger">Supprimer</button>
@@ -52,6 +56,8 @@ $link = $router->url('admin_categories');
 
 
 <div class="d-flex justify-content-between my-4">
-    <?= $pagination->previousLink($link) ?>
-    <?= $pagination->nextLink($link) ?>
+    <?= "" //$pagination->previousLink($link) 
+    ?>
+    <?= "" // $pagination->nextLink($link) 
+    ?>
 </div>

@@ -3,6 +3,7 @@
 namespace App\Table;
 
 use PDO;
+use Exception;
 use App\Model\Category;
 use App\Table\Exception\NotFoundException;
 
@@ -48,6 +49,42 @@ class CategoryTable extends Table
         foreach ($categories as $category) {
             //$postsByID[$category->getPostID()]->categories[] = $category;
             $postsByID[$category->getPostID()]->addCategory($category);
+        }
+    }
+
+
+    //////////
+    public function create(Category $category): void
+    {
+        $query = $this->pdo->prepare("INSERT INTO {$this->table} set  name= :name,slug =:slug");
+        $ok = $query->execute([
+            'name' => $category->getName(),
+            'slug' => $category->getSlug(),
+        ]);
+        if ($ok === false) {
+            throw new Exception("Impossible de crée l'enregistrement {$category->getID()} dans la table {$this->table}");
+        }
+        $category->setID($this->pdo->lastInsertId());
+    }
+    public function update(Category $category): void
+    {
+        $query = $this->pdo->prepare("UPDATE {$this->table} SET name= :name,slug =:slug WHERE id = :id");
+        $ok = $query->execute([
+            'id' => $category->getID(),
+            'name' => $category->getName(),
+            'slug' => $category->getSlug()
+        ]);
+        if ($ok === false) {
+            throw new Exception("Impossible de supprimer l'enregistrement {$category->getID()} dans la table {$this->table}");
+        }
+    }
+
+    public function delete(int $id): void
+    {
+        $query = $this->pdo->prepare("DELETE FROM {$this->table} WHERE id = ?");
+        $ok = $query->execute([$id]);
+        if ($ok === false) {
+            throw new Exception("Impossible de supprimer l'enregistrement $id dans la table {$this->table}");
         }
     }
 }

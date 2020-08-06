@@ -50,4 +50,15 @@ abstract class Table
         $query->execute([$value]);
         return (int) $query->fetch(PDO::FETCH_NUM)[0] > 0;
     }
+
+    /**
+     * @return ceci est le paginatedquery qu'on va utiliser dans admin category
+     */
+    public function all(): array
+    {
+        $sql = "SELECT * FROM {$this->table}";
+        return $this->pdo->query($sql, PDO::FETCH_CLASS, $this->class)->fetchAll();
+        /*$query=$this->pdo->query($sql);
+    $query->setFetchMode(PDO::FETCH_CLASS, $this->class);*/
+    }
 }

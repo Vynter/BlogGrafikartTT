@@ -3,43 +3,44 @@
 use App\Auth;
 use App\HTML\Form;
 use App\Connection;
-use App\Model\Post;
+use App\Model\Category;
 use App\ObjectHelper;
+use App\Table\CategoryTable;
 use Valitron\Validator;
-use App\Table\PostTable;
-use App\Validators\PostValidator;
+use App\Validators\CategoryValidator;
+
 
 Auth::check();
 $success = false;
 $errors = [];
-$post = new Post(); // nouveau poste vide
-$post->setCreated_at(date('Y-m-d H:i:s'));
+$item = new Category(); // nouveau poste vide
+
 
 if (!empty($_POST)) {
     $pdo = Connection::getPDO();
-    $postTable = new PostTable($pdo);
+    $table = new CategoryTable($pdo);
     Validator::lang('fr'); //changement de langue
-    $v = new PostValidator($_POST, $postTable, $post->getID());
+    $v = new CategoryValidator($_POST, $table, $item->getID());
 
-    ObjectHelper::hydrate($post, $_POST, ['name', 'content', 'slug', 'created_at']);
+    ObjectHelper::hydrate($item, $_POST, ['name', 'slug']);
     if ($v->validate()) {
-        $postTable->create($post);
-        header('Location: ' . $router->url('admin_post', ['id' => $post->getID()]) . '?created=1');
+        $table->create($item);
+        header('Location: ' . $router->url('admin_categories') . '?created=1');
         exit();
     } else {
         $errors = $v->errors();
     }
 }
-$form = new Form($post, $errors);
+$form = new Form($item, $errors);
 ?>
 
 <?php if (!empty($errors)) : ?>
 <div class="alert alert-danger">
-    Article n'a pas pu etre enregistrer, merci de corriger vos erreurs.
+    Catégorie n'a pas pu etre enregistrer, merci de corriger vos erreurs.
 </div>
 <?php endif ?>
 
-<h1>Crée un l'article </h1>
+<h1>Crée un la catégorie </h1>
 
 
 

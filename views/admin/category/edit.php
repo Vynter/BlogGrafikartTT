@@ -14,7 +14,7 @@ $table = new CategoryTable($pdo);
 $item = $table->find($params['id']);
 $success = false;
 $errors = [];
-$fields = ['name', 'content', 'slug', 'created_at'];
+$fields = ['name', 'slug'];
 if (!empty($_POST)) {
     Validator::lang('fr'); //changement de langue
     $v = new CategoryValidator($_POST, $table, $item->getID());
