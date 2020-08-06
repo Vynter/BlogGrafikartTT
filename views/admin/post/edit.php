@@ -4,6 +4,7 @@ use App\Auth;
 use App\HTML\Form;
 use App\Connection;
 use App\ObjectHelper;
+use App\Table\CategoryTable;
 use Valitron\Validator;
 use App\Table\PostTable;
 use App\Validators\PostValidator;
@@ -11,7 +12,10 @@ use App\Validators\PostValidator;
 Auth::check();
 $pdo = Connection::getPDO();
 $postTable = new PostTable($pdo);
+$categoryTable = new CategoryTable($pdo);
+$categories = $categoryTable->list(); //utilisé dans le select des categorie
 $post = $postTable->find($params['id']);
+$categoryTable->hydratePosts([$post]);
 $success = false;
 $errors = [];
 

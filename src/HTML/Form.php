@@ -33,6 +33,46 @@ class Form
         </div>
 HTML;
     }
+
+    public function select(string $key, string $label, array $options = []): string
+    {
+        $value = $this->getValue($key);
+        $optionsHTML = [];
+        foreach ($options as $k => $v) {
+            $selected = in_array($k, $value) ? ' selected' : "";
+            $optionsHTML[] = "<option value='$k' $selected>$v</option>";
+        }
+
+        $optionsHTML = implode('', $optionsHTML);
+
+        /*gestion de la partie invalide*/
+        $inputClass = 'form-control';
+        $invalidFeedback = "";
+        if (isset($this->errors[$key])) {
+            $inputClass .= ' is-invalid';
+            $invalidFeedback = '<div class="invalid-feedback">' . implode('<br>', $this->errors[$key]) . '</div>';
+        }
+
+        return <<<HTML
+         <div class="form-group">
+        <label for="field{$key}">{$label}</label>
+        <Select id ="field{$key}" multiple class="{$inputClass}" name="{$key}" required>{$optionsHTML}</select>
+        {$invalidFeedback}
+        </div>
+HTML;
+    }
+    /*
+  </div>
+  <div class="form-group">
+    <label for="exampleFormControlSelect2">Example multiple select</label>
+    <select multiple class="form-control" id="exampleFormControlSelect2">
+      <option>1</option>
+      <option>2</option>
+      <option>3</option>
+      <option>4</option>
+      <option>5</option>
+    </select>
+  </div>*/
     public function textarea(string $key, string $label): string
     {
         $value = $this->getValue($key);
@@ -52,7 +92,7 @@ HTML;
 HTML;
     }
 
-    private function getValue(string $key): ?string
+    private function getValue(string $key)
     {
         if (is_array($this->data)) {
             return $this->data[$key] ?? null;

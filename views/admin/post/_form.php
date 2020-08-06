@@ -1,6 +1,7 @@
 <form action="" method="POST">
     <?= $form->input('name', 'Titre') ?>
     <?= $form->input('slug', 'URL') ?>
+    <?= $form->select('Categories_Ids', 'catégories', $categories) ?>
     <?= $form->textarea('content', 'Contenu') ?>
     <?= $form->input('created_at', 'Date de création') ?>
 

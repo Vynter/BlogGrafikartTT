@@ -52,7 +52,6 @@ class CategoryTable extends Table
         }
     }
 
-
     //////////
     public function create(Category $category): void
     {
@@ -86,5 +85,16 @@ class CategoryTable extends Table
         if ($ok === false) {
             throw new Exception("Impossible de supprimer l'enregistrement $id dans la table {$this->table}");
         }
+    }
+
+    public function list(): array
+    {
+        $sql = "SELECT * FROM {$this->table} ORDER BY name ASC";
+        $categories = $this->pdo->query($sql, PDO::FETCH_CLASS, $this->class)->fetchAll();
+        $results = [];
+        foreach ($categories as $category) {
+            $results[$category->getID()] = $category->getName();
+        }
+        return $results;
     }
 }
