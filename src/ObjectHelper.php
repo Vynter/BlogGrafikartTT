@@ -3,7 +3,7 @@
 namespace App;
 
 class ObjectHelper
-{
+{   //ObjectHelper::hydrate($item, $_POST, $fields);
     public static function hydrate($object, array $data, array $fields): void
     {
         foreach ($fields as $field) {

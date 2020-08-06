@@ -61,4 +61,40 @@ abstract class Table
         /*$query=$this->pdo->query($sql);
     $query->setFetchMode(PDO::FETCH_CLASS, $this->class);*/
     }
+
+    public function deleteParent(int $id) // méthode non utilisé
+    {
+        $query = $this->pdo->prepare("DELETE FROM {$this->table} WHERE id = ?");
+        $ok = $query->execute([$id]);
+        if ($ok === false) {
+            throw new Exception("Impossible de supprimer l'enregistrement $id dans la table {$this->table}");
+        }
+    }
+
+    public function updateParent($data, $id): void // méthode non utilisé
+    {
+        $fields = [];
+        foreach ($data as $key => $value) {
+            $fields[] = "$key =:$key";
+        }
+        $query = $this->pdo->prepare("UPDATE {$this->table} SET " . implode(", ", $fields) . " WHERE id = $id");
+        $ok = $query->execute(array_merge($data, ["id" => $id]));
+        if ($ok === false) {
+            throw new Exception("Impossible de supprimer l'enregistrement {$data->getID()} dans la table {$this->table}");
+        }
+    }
+
+    public function createParent($data): int //méthode non utilisé
+    {
+        $fields = [];
+        foreach ($data as $key => $value) {
+            $fields[] = "$key =:$key";
+        }
+        $query = $this->pdo->prepare("INSERT INTO {$this->table} set " . implode(", ", $fields));
+        $ok = $query->execute([$data]);
+        if ($ok === false) {
+            throw new Exception("Impossible de crée l'enregistrement {$data->getID()} dans la table {$this->table}");
+        }
+        return (int)$this->pdo->lastInsertId();
+    }
 }
