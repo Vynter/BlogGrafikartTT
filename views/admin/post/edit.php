@@ -1,5 +1,6 @@
 <?php
 
+use App\Auth;
 use App\HTML\Form;
 use App\Connection;
 use App\ObjectHelper;
@@ -7,6 +8,7 @@ use Valitron\Validator;
 use App\Table\PostTable;
 use App\Validators\PostValidator;
 
+Auth::check();
 $pdo = Connection::getPDO();
 $postTable = new PostTable($pdo);
 $post = $postTable->find($params['id']);

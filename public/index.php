@@ -42,10 +42,18 @@ $router
     ->get('/', 'post/index', 'home') // liste des aricles
     ->get('/blog/categoty/[*:slug]-[i:id]', 'category/show', 'category') // quand deux lien se ressemble de préférence mettre la plus compliqué en premier
     ->get('/blog/[*:slug]-[i:id]', 'post/show', 'post') //contenu de l'article
+    //Admin
+    //Gestion des articles
     ->get('/admin', 'admin/post/index', 'admin_posts') // index de l'administration
     ->match('/admin/posts/[i:id]', 'admin/post/edit', 'admin_post') // quand on choisir ART a edit on utilise get et post when we valid edit
     ->post('/admin/posts/[i:id]/delete', 'admin/post/delete', 'admin_post_delete') // article suprimer
     ->match('/admin/posts/new', 'admin/post/new', 'admin_post_new') // création de l'article
+    //Gestion des catégories
+    ->get('/admin/categories', 'admin/category/index', 'admin_categories') // index de l'administration
+    ->match('/admin/category/[i:id]', 'admin/category/edit', 'admin_category') // quand on choisir ART a edit on utilise get et post when we valid edit
+    ->post('/admin/category/[i:id]/delete', 'admin/category/delete', 'admin_categories_delete') // article suprimer
+    ->match('/admin/category/new', 'admin/category/new', 'admin_categories_new') // création de l'article
+
     ->run();
 
 

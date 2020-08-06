@@ -15,7 +15,7 @@
         <a href="<?= $router->url('home'); ?>" class="navbar-brand">Mon sitess</a>
         <ul class="navbar-nav">
             <li class="nav-item"><a href="<?= $router->url('admin_posts') ?>" class="nav-link">Articles</a></li>
-            <li class="nav-item"><a href="<?= $router->url('admin_posts') ?>" class="nav-link">Catégories</a></li>
+            <li class="nav-item"><a href="<?= $router->url('admin_categories') ?>" class="nav-link">Catégories</a></li>
         </ul>
     </nav>
     <div class="container mt-4">
