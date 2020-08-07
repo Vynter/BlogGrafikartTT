@@ -8,7 +8,7 @@ use Valitron\Validator;
 class PostValidator extends AbstractValidator
 {
 
-    public function __construct(array $data, PostTable $table, ?int $postID = null)
+    public function __construct(array $data, PostTable $table, ?int $postID = null, array $categories)
     {
         parent::__construct($data); // on appel le constructeur parent
         $this->validator->labels(array( //on change le nom des label pour les erreurs
@@ -18,6 +18,7 @@ class PostValidator extends AbstractValidator
         $this->validator->rule('required', ['name', 'slug']); // définition des régles
         $this->validator->rule('lengthBetween', ['name', 'slug'], 3, 200); // la longueur doit étre entre 3 a 200 caract
         $this->validator->rule('slug', 'slug'); //la régle slug(utilisé que les carac int et _) appliqué sur le champ slug
+        $this->validator->rule('subset', 'categories_ids', $categories);
         $this->validator->rule(function ($field, $value) use ($table, $postID) {
             return !$table->exists($field, $value, $postID);
         }, ['slug', 'name'], ' est déja utilisé');

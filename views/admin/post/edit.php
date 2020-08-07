@@ -19,9 +19,10 @@ $categoryTable->hydratePosts([$post]);
 $success = false;
 $errors = [];
 
+
 if (!empty($_POST)) {
     Validator::lang('fr'); //changement de langue
-    $v = new PostValidator($_POST, $postTable, $post->getID());
+    $v = new PostValidator($_POST, $postTable, $post->getID(), $categories);
     /*    $v = new Validator($_POST);
     $v->labels(array( //on change le nom des label pour les erreurs
         'name' => 'Titre',
@@ -40,7 +41,8 @@ if (!empty($_POST)) {
         ->setCreated_at($_POST['created_at']);*/
     ObjectHelper::hydrate($post, $_POST, ['name', 'content', 'slug', 'created_at']);
     if ($v->validate()) {
-        $postTable->update($post);
+        $postTable->update($post, $_POST['Categories_Ids']);
+        $categoryTable->hydratePosts([$post]); // c pour remettre a jour les donner du select aprés modification
         $success = true;
     } else {
         $errors = $v->errors();

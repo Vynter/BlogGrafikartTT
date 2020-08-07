@@ -56,7 +56,7 @@ HTML;
         return <<<HTML
          <div class="form-group">
         <label for="field{$key}">{$label}</label>
-        <Select id ="field{$key}" multiple class="{$inputClass}" name="{$key}" required>{$optionsHTML}</select>
+        <Select id ="field{$key}" multiple class="{$inputClass}" name="{$key}[]" required>{$optionsHTML}</select> <!--//name="{$key}[] est important pour choisir plusieur champs a la fois-->
         {$invalidFeedback}
         </div>
 HTML;

@@ -30,7 +30,7 @@ class PostTable extends Table
         }
         return $result;
     }*/
-    public function create(Post $post): void
+    public function create(Post $post, array $categories): void
     {
         $query = $this->pdo->prepare("INSERT INTO {$this->table} set  name= :name,slug =:slug, content =:content, created_at = :created_at");
         $ok = $query->execute([
@@ -43,9 +43,20 @@ class PostTable extends Table
             throw new Exception("Impossible de crée l'enregistrement {$post->getID()} dans la table {$this->table}");
         }
         $post->setID($this->pdo->lastInsertId());
+        $this->pdo->exec('DELETE FROM post_category WHERE post_id =' . $post->getID());
+        $query2 = $this->pdo->prepare('INSERT INTO post_category SET post_id = :idp , category_id = :idc');
+        foreach ($categories as $category) {
+            $query2->execute([
+                'idp' => $post->getID(),
+                'idc' => $category
+            ]);
+        }
+        $this->pdo->commit(); // pas nécessaire mais par sécurité
     }
-    public function update(Post $post): void
+
+    public function update(Post $post, array $categories): void
     {
+        $this->pdo->beginTransaction(); // pas nécessaire mais par sécurité
         $query = $this->pdo->prepare("UPDATE {$this->table} SET name= :name,slug =:slug, content =:content, created_at = :created_at WHERE id = :id");
         $ok = $query->execute([
             'id' => $post->getID(),
@@ -57,6 +68,15 @@ class PostTable extends Table
         if ($ok === false) {
             throw new Exception("Impossible de supprimer l'enregistrement {$post->getID()} dans la table {$this->table}");
         }
+        $this->pdo->exec('DELETE FROM post_category WHERE post_id =' . $post->getID());
+        $query2 = $this->pdo->prepare('INSERT INTO post_category SET post_id = :idp , category_id = :idc');
+        foreach ($categories as $category) {
+            $query2->execute([
+                'idp' => $post->getID(),
+                'idc' => $category
+            ]);
+        }
+        $this->pdo->commit(); // pas nécessaire mais par sécurité
     }
 
     public function delete(int $id): void

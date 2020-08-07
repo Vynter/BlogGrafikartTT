@@ -35,6 +35,7 @@ class CategoryTable extends Table
     {
         $postsByID = [];
         foreach ($posts as $post) {
+            $post->setCategories([]); // cela aide aprés une mise ajour que tt soit ajour
             $postsByID[$post->getID()] = $post;
         }
 
