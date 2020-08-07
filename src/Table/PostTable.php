@@ -32,6 +32,7 @@ class PostTable extends Table
     }*/
     public function create(Post $post, array $categories): void
     {
+        $this->pdo->beginTransaction(); // pas nécessaire mais par sécurité
         $query = $this->pdo->prepare("INSERT INTO {$this->table} set  name= :name,slug =:slug, content =:content, created_at = :created_at");
         $ok = $query->execute([
             'name' => $post->getName(),
