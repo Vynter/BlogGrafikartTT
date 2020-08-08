@@ -17,18 +17,21 @@ class Form
     }
     public function input(string $key, string $label): string
     {
+
+        $type = $key === "password" ? "password" : "text";
         $value = $this->getValue($key);
         /*gestion de la partie invalide*/
         $inputClass = 'form-control';
         $invalidFeedback = "";
         if (isset($this->errors[$key])) {
             $inputClass .= ' is-invalid';
+
             $invalidFeedback = '<div class="invalid-feedback">' . implode('<br>', $this->errors[$key]) . '</div>';
         }
         return <<<HTML
          <div class="form-group">
         <label for="field{$key}">{$label}</label>
-        <input type="text" id ="field{$key}" class="{$inputClass}" name="{$key}" value="{$value}" required>
+        <input type="{$type}" id ="field{$key}" class="{$inputClass}" name="{$key}" value="{$value}" required>
         {$invalidFeedback}
         </div>
 HTML;
