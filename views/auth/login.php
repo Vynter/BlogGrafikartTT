@@ -22,6 +22,8 @@ if (!empty($_POST)) {
         if (password_verify($_POST['password'], $u->GetPassword()) === false) {
             $errors['password'] = ["mdp incorrect"];;
         } else {
+            session_start();
+            $_SESSION['auth'] = $u->getId();
             header('Location: ' . $router->url('admin_posts'));
             exit();
         }
@@ -35,7 +37,12 @@ if (!empty($_POST)) {
 $form = new Form($user, $errors);
 ?>
 <h1>Se connecter</h1>
-<form action="" method="POST">
+<?php if (isset($_GET['forbidden'])) : ?>
+<div class="alert alert-danger">
+    Vous ne pouvais pas accéder a cette page
+</div>
+<?php endif ?>
+<form action="<?= $router->url('login') ?>" method="POST">
     <?= $form->input('username', 'Nom d\'utilisateur'); ?>
     <?= $form->input('password', 'Mot de passe)'); ?>
     <button type="submit" class="btn btn-primary">Se connecter</button>

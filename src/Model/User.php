@@ -6,6 +6,7 @@ class User
 {
     private $username;
     private $password;
+    private $id;
 
     public function getPassword(): ?string
     {
@@ -27,6 +28,18 @@ class User
     public function setUsername($username)
     {
         $this->username = $username;
+
+        return $this;
+    }
+
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    public function setId($id)
+    {
+        $this->id = $id;
 
         return $this;
     }

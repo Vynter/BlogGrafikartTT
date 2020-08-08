@@ -3,6 +3,7 @@
 namespace App;
 
 use AltoRouter;
+use App\security\ForbiddenException;
 
 class Router
 {
@@ -57,10 +58,15 @@ class Router
         $router = $this; // utilisé dans generate
         $isAdmin = strpos($view, 'admin') !== false; // obligé le !==false , si 'admin' n'est pas dans le lien de url ca retourne false
         $layout = $isAdmin ? '/admin/layouts/default' : 'layouts/default';
-        ob_start();
-        require $this->viewPath . DIRECTORY_SEPARATOR . $view . '.php';
-        $content = ob_get_clean();
-        require $this->viewPath . DIRECTORY_SEPARATOR . $layout . '.php';
+        try {
+            ob_start();
+            require $this->viewPath . DIRECTORY_SEPARATOR . $view . '.php';
+            $content = ob_get_clean();
+            require $this->viewPath . DIRECTORY_SEPARATOR . $layout . '.php';
+        } catch (ForbiddenException $e) {
+            header('Location: ' . $this->url('login') . '?forbidden=1');
+            exit();
+        }
         return $this;
     }
 }
