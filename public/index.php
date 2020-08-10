@@ -43,6 +43,7 @@ $router
     ->get('/blog/categoty/[*:slug]-[i:id]', 'category/show', 'category') // quand deux lien se ressemble de préférence mettre la plus compliqué en premier
     ->get('/blog/[*:slug]-[i:id]', 'post/show', 'post') //contenu de l'article
     ->match('/login', 'auth/login', 'login')
+    ->post('/logout', 'auth/logout', 'logout')
     //Admin
     //Gestion des articles
     ->get('/admin', 'admin/post/index', 'admin_posts') // index de l'administration

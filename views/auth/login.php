@@ -42,7 +42,8 @@ $form = new Form($user, $errors);
     Vous ne pouvais pas accéder a cette page
 </div>
 <?php endif ?>
-<form action="<?= $router->url('login') ?>" method="POST">
+<form action="<?= $router->url('login') // c pour enlever l'erreur en cas on a tjr en guete le error 
+                ?>" method="POST">
     <?= $form->input('username', 'Nom d\'utilisateur'); ?>
     <?= $form->input('password', 'Mot de passe)'); ?>
     <button type="submit" class="btn btn-primary">Se connecter</button>

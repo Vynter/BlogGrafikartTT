@@ -58,6 +58,9 @@ class Router
         $router = $this; // utilisé dans generate
         $isAdmin = strpos($view, 'admin') !== false; // obligé le !==false , si 'admin' n'est pas dans le lien de url ca retourne false
         $layout = $isAdmin ? '/admin/layouts/default' : 'layouts/default';
+        if ($view === null) {
+            $view = 'e404';
+        }
         try {
             ob_start();
             require $this->viewPath . DIRECTORY_SEPARATOR . $view . '.php';

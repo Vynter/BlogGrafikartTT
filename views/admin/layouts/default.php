@@ -16,6 +16,11 @@
         <ul class="navbar-nav">
             <li class="nav-item"><a href="<?= $router->url('admin_posts') ?>" class="nav-link">Articles</a></li>
             <li class="nav-item"><a href="<?= $router->url('admin_categories') ?>" class="nav-link">Catégories</a></li>
+            <li class="nav-item">
+
+                <form action="<?= $router->url('logout') ?>" method="post" style="display:inline"><button type="submit"
+                        class="nav-link" style="background:transparent; border:none;">Déconnecter</button></form>
+            </li>
         </ul>
     </nav>
     <div class="container mt-4">
