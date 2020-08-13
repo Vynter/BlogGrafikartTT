@@ -27,7 +27,7 @@ if (isset($_GET['page']) && $_GET['page'] === '1') {
         $uri = $uri . '?' . $query; // render: /?zz=5 , pour rendre le reste des argument sans le page=1
     }
     http_response_code(301);
-    header('Location: ' . $uri);
+    header('Location: ' . $uri); // redirection è '/' or '/?zz=5'
     exit();
 }
 /*
