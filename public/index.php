@@ -24,7 +24,7 @@ if (isset($_GET['page']) && $_GET['page'] === '1') {
     $query = http_build_query($get); // reconstruction de l'url sans page
 
     if (!empty($query)) {
-        $uri = $uri . '?' . $query;
+        $uri = $uri . '?' . $query; // render: /?zz=5 , pour rendre le reste des argument sans le page=1
     }
     http_response_code(301);
     header('Location: ' . $uri);
