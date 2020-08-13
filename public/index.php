@@ -15,13 +15,13 @@ $whoops->pushHandler(new \Whoops\Handler\PrettyPageHandler);
 $whoops->register();
 // until here
 
-/* Ceci permet de construire un lien sans le $_GET["PAGE"] */
+/* Ceci permet de construire un lien sans le $_GET["PAGE"] sans le page=1*/
 if (isset($_GET['page']) && $_GET['page'] === '1') {
-    $uri = $_SERVER['REQUEST_URI'];
-    $uri = explode("?", $uri)[0];
-    $get = $_GET;
-    unset($get['page']);
-    $query = http_build_query($get);
+    $uri = $_SERVER['REQUEST_URI']; // url complet
+    $uri = explode("?", $uri)[0]; // "/"
+    $get = $_GET; //"liste des argument page=2&zz=5
+    unset($get['page']); // supression de get page
+    $query = http_build_query($get); // reconstruction de l'url sans page
 
     if (!empty($query)) {
         $uri = $uri . '?' . $query;
